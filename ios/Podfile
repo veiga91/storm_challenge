@@ -29,7 +29,8 @@ target 'Marvel' do
 
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  # pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
 
   target 'MarvelTests' do
     inherit! :search_paths
