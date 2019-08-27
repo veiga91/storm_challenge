@@ -6,35 +6,30 @@ import { fetchCharacters } from '../store/actions/home';
 import { Container, ErrorContainer } from '../components/layout';
 import { getCharactersData, getFetchingError, getLoadingState } from '../store/selectors/home';
 import List from '../components/list/List';
-import CharacterThumb from '../components/list/CharacterItem';
+import CharacterItem from '../views/home/CharacterItem';
 import { withTheme } from 'styled-components';
-import logo from '../assets/logo.jpg';
-import magnify from '../assets/magnify.png';
+import { headerWithMagnifyIcon } from '../components/header/Headers';
 
 class Home extends PureComponent {
 
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: '#000'
-    },
-    headerLeft: <Image style={{ width: 100, height: 40, marginLeft: 20 }} source={logo} />,
-    headerRight: (
-      <TouchableOpacity style={{ width: 50, height: 40 }} onPress={() => {}}>
-        <Image source={magnify} style={{ width: 50, height: 40 }}/>
-      </TouchableOpacity>
-    ),
+  static navigationOptions = ({ navigation }) => {
+    return headerWithMagnifyIcon({ onPress: () => navigation.navigate('Search') });
   }
 
   componentDidMount() {
     this.props.fetchCharacters();
   }
 
+  goToDetail = (id, uri) => () => {
+    this.props.navigation.navigate('Detail', { id, uri });
+  }
+
   _renderItem = ({ item }) => {
     const uri = `${item.thumbnail.path}.${item.thumbnail.extension}`;
     
     return (
-      <CharacterThumb
-        onPress={() => this.props.navigation.navigate('Detail', { id: item.id, uri })}
+      <CharacterItem
+        onPress={this.goToDetail(item.id, uri)}
         name={item.name}
         loading={!item.loaded}
         size="full"

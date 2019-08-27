@@ -36,6 +36,7 @@ export const ImageContainer = styled(Container)`
   justify-content: center;
   align-items: center;
   background-color: transparent;
+  flex-direction: ${props => props.direction || 'column'};
   ${(props) => {
     if (props.size) {
       return `
@@ -84,4 +85,9 @@ export const Separator = styled.View`
   margin-right: 3;
   background-color: ${props => props.theme.colors.white};
   height: ${scale(1)};
+`;
+
+export const BannerImage = styled.Image`
+  width: 100%;
+  height: ${props => props.theme.banner.height};
 `;

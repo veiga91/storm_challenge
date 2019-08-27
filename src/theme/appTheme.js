@@ -3,7 +3,8 @@ import { scale, verticalScale } from 'react-native-size-matters';
 const colors = {
   lightGrey: '#CDCDCD',
   white: '#FFFFFF',
-  black: '#000'
+  black: '#000',
+  red: '#EC1E24'
 };
 
 const thumbs = {
@@ -15,9 +16,14 @@ const thumbs = {
     width: '100%',
     height: verticalScale(150)
   }
-}
+};
+
+const banner = {
+  height: verticalScale(300)
+};
 
 export default {
   colors,
-  thumbs
+  thumbs,
+  banner
 };

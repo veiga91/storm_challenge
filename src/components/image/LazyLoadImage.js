@@ -1,18 +1,15 @@
 
 import React, { Component } from 'react';
-import { Animated, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
-import { ImageContainer, Thumb, ItemLoadingContainer } from '../layout';
-import { CharacterName, NameTag } from './styled';
-import { withTheme } from 'styled-components';
-import logo from '../../assets/logo.jpg';
+import { Animated, ActivityIndicator, Image } from 'react-native';
+import { ItemLoadingContainer } from '../layout';
 
-const Loader = ({ height }) => (
+const Loader = ({ height = '100%' }) => (
   <ItemLoadingContainer style={{ height }}>
     <ActivityIndicator color="#FFF" size={25} />
   </ItemLoadingContainer>
 );
 
-class CharacterItem extends Component {
+class LazyLoadImage extends Component {
   state = {
     opacity: new Animated.Value(0),
     showImage: false
@@ -26,7 +23,7 @@ class CharacterItem extends Component {
   }
 
   handleLoading = () => {
-    const { height } = this.props.theme.thumbs.full;
+    const { height } = this.props;
     
     if (this.props.loading) {
       return (
@@ -53,30 +50,14 @@ class CharacterItem extends Component {
             paddingLeft: 5,
           }}
         >
-           <ImageContainer size={this.props.size}>
-            <Thumb
-              size={this.props.size}
-              source={{ uri: this.props.uri }}
-              resizeMode="stretch"
-              resizeMethod="auto"
-              onLoadEnd={this._onLoadEnd}
-            />
-          </ImageContainer>
-          <NameTag>
-            <CharacterName>{this.props.name}</CharacterName>
-          </NameTag>
+          {this.props.renderContent({ _onLoadEnd: this._onLoadEnd })}
         </Animated.View>
     );
   }
 
   render() {
-    return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        {this.handleLoading()}
-        
-      </TouchableOpacity>
-    );
+    return this.handleLoading();
   }
 };
 
-export default withTheme(CharacterItem);
+export default LazyLoadImage;

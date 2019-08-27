@@ -1,17 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Text, Image, TouchableOpacity, View } from 'react-native';
+import { Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCharacterDetail } from '../store/actions/detail';
-import { Container, ErrorContainer } from '../components/layout';
+import { ErrorContainer, LoadingContainer } from '../components/layout';
 import { getCharacterData, getFetchingError, getLoadingState } from '../store/selectors/detail';
-import List from '../components/list/List';
-import CharacterThumb from '../components/list/CharacterItem';
 import { withTheme } from 'styled-components';
-import logo from '../assets/logo.jpg';
-import magnify from '../assets/magnify.png';
-import { verticalScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-navigation';
+import { FloatingBackButtonHeader, Headerbanner } from '../components/header/Headers';
+import Series from '../views/detail/Series';
+import Stories from '../views/detail/Stories';
+import { CharacterName } from '../views/detail/styled';
 
 class Home extends PureComponent {
 
@@ -39,31 +38,45 @@ class Home extends PureComponent {
     
     if (isLoading) {
       return (
-        <ErrorContainer>
-          <Text>{error}</Text>
-        </ErrorContainer>
+        <LoadingContainer>
+          <ActivityIndicator size={"large"} color={this.props.theme.colors.white}/>
+        </LoadingContainer>
       );
      }
 
     return (
-      <Container >
-        <Text>{this.props.character.name}</Text>
-      </Container>
+      <ScrollView style={styles.scroll}>
+        <CharacterName>{this.props.character.name}</CharacterName>
+        <Series series={this.props.character.series} />
+        <Stories stories={this.props.character.stories} />
+      </ScrollView>
     );
+  }
+
+  goToHome = () => {
+    this.props.navigation.navigate('Home');
   }
 
   render() {
     return (
-        <SafeAreaView style={{ width: '100%', height: verticalScale(300), backgroundColor: this.props.theme.colors.black }}>
-      <Container bgColor="black">
-        <Image resizeMode="cover"
-      resizeMethod="resize"style={{ width: '100%', height: verticalScale(300) }} source={{ uri: this.props.navigation.getParam('uri') }} />
-        {this.handleLoadingState()}
-      </Container>
-        </SafeAreaView>
+      <SafeAreaView style={[styles.container, { backgroundColor: this.props.theme.colors.black }]}>
+          <FloatingBackButtonHeader onPress={this.goToHome} />
+          <Headerbanner uri={this.props.navigation.getParam('uri')} />
+          {this.handleLoadingState()}
+      </SafeAreaView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%'
+  },
+  scroll: {
+    paddingBottom: '100%',
+    paddingHorizontal: 30
+  }
+});
 
 const mapStateFormProps = (state, ownProps) => {
   return {
